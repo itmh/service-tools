@@ -1,7 +1,7 @@
 {
   "name": "itmh/service-tools",
   "description": "service tools",
-  "version": "0.1.0",
+  "type": "library",
   "minimum-stability": "stable",
   "license": "MIT",
   "authors": [
@@ -10,7 +10,6 @@
       "email": "chshanovskiy.maxim@itmh.ru"
     }
   ],
-  "type": "library",
   "require": {
       "php": ">=5.4.0",
     "monolog/monolog": "1.14.x",
