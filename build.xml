@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="service-tools" basedir="." default="build">
+    <property name="builddir" value="./build"/>
+    <target name="init">
+        <mkdir dir="${builddir}"/>
+        <mkdir dir="${builddir}/logs"/>
+        <exec command="composer install --prefer-dist"
+              passthru="true"/>
+    </target>
+    <target name="clean">
+        <delete dir="${builddir}"/>
+    </target>
+    <target name="build" depends="clean,init,lint,phpcpd,phpcs,test"/>
+    <target name="phpcpd">
+        <exec passthru="true"
+              escape="false"
+              command="./vendor/bin/phpcpd --log-pmd ${builddir}/logs/pmd.xml ./src  ./tests/unit/ServiceTools"
+            />
+    </target>
+    <target name="phpcs">
+        <exec passthru="true"
+              escape="false"
+              command="./vendor/bin/phpcs --encoding=UTF-8 --standard=PSR2 --extensions=php --report-checkstyle=${builddir}/logs/checkstyle.xml ./src ./tests/unit/ServiceTools"
+            />
+    </target>
+    <target name="test" depends="clean,init">
+        <exec passthru="true"
+              escape="false"
+              command="./vendor/bin/codecept build "
+            />
+        <exec passthru="true"
+              escape="false"
+              command="./vendor/bin/codecept run unit ServiceTools --xml='report.xml' --coverage-xml='coverage.xml' --coverage-html='coverage'"
+            />
+    </target>
+    <target name="lint" description="Perform syntax check of sourcecode files">
+        <apply executable="php" failonerror="true">
+            <arg value="-l"/>
+
+            <fileset dir=".">
+                <include name="src/*.php"/>
+                <include name="tests/unit/ServiceTools/*.php"/>
+            </fileset>
+        </apply>
+    </target>
+</project>

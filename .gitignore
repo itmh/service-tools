@@ -1,0 +1,8 @@
+.idea
+build
+vendor
+
+tests/_output
+tests/unit/UnitTester.php
+tests/functional/FunctionalTester.php
+tests/acceptance/AcceptanceTester.php

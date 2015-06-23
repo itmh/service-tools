@@ -1,0 +1,165 @@
+<?php
+
+namespace ServiceTools\Services;
+
+use ITMH\Soap\Client;
+use ServiceTools\Core\ConfigurationErrorException;
+use ServiceTools\Core\Response;
+use ServiceTools\Core\Service;
+use SoapFault;
+
+/**
+ * Class SoapService
+ * @package ServiceTools\Services
+ */
+class SoapService extends Service
+{
+    const ERR__URL_REQUIRED = 'Soap wsdl url is not specified';
+    const ERR__DEFAULT_ARGS_ARRAY = 'Default args must be an array';
+
+    /**
+     * Экземпляр клиента
+     *
+     * @var \ITMH\Soap\Client
+     */
+    protected $client;
+
+    /**
+     * Массив моделей для автоматического отображения результата
+     *
+     * @var array
+     */
+    protected $mapping = [
+        // нестрогое приведение результата к экземпляру класса (игнорирует несоответствие полей)
+        'mapper' => [],
+        // строгое приведение результата к экземпляру класса (бросает исключение при несоответствии полей)
+        'strict' => [],
+        // приведение результата к обычному массиву
+        'array' => [],
+    ];
+
+    /**
+     * Аргументы по умолчанию, которые должны добавляться к каждому запросу
+     *
+     * @var array
+     */
+    protected $defaultArgs;
+
+    /**
+     * Производит конфигурирование сервиса
+     *
+     * @param array $config Опции конфигурации
+     *
+     * @throws ConfigurationErrorException
+     */
+    public function configure(array $config = [])
+    {
+        if (!array_key_exists('url', $config)) {
+            throw new ConfigurationErrorException(self::ERR__URL_REQUIRED);
+        }
+
+        $soapOptions = [];
+        if (array_key_exists('soapOptions', $config)) {
+            $soapOptions = $config['soapOptions'];
+        }
+
+        $this->client = new Client($config['url'], $soapOptions);
+
+        if (array_key_exists('contentType', $config)) {
+            $this->client->setContentType($config['contentType']);
+        }
+        if (array_key_exists('curlOptions', $config)) {
+            $this->client->setCurlOptions($config['curlOptions']);
+        }
+
+        if (array_key_exists('defaultArgs', $config)) {
+            if (!is_array($config['defaultArgs'])) {
+                throw new ConfigurationErrorException(
+                    self::ERR__DEFAULT_ARGS_ARRAY
+                );
+            }
+            $this->defaultArgs = $config['defaultArgs'];
+        }
+
+        if (array_key_exists('__mapper', $config)) {
+            $this->mapping['mapper'] = $config['__mapper'];
+        }
+        if (array_key_exists('__mapper_strict', $config)) {
+            $this->mapping['strict'] = $config['__mapper_strict'];
+        }
+        if (array_key_exists('__mapper_array', $config)) {
+            $this->mapping['array'] = $config['__mapper_array'];
+        }
+
+        parent::configure($config);
+    }
+
+    /**
+     * Реализует взаимодействие с внешним сервисом
+     *
+     * @param string $method Вызываемый метод
+     * @param array  $args   Аргументы вызываемого метода
+     *
+     * @return Response
+     */
+    protected function implementation($method, array $args = array())
+    {
+        try {
+            $raw = call_user_func_array(array($this->client, $method), $args);
+            $raw = $this->map($method, $raw);
+
+            return Response::success($raw);
+        } catch (SoapFault $fault) {
+            return Response::failure(null, $fault->getMessage());
+        }
+    }
+
+    /**
+     * @param string $method Вызываемый метод
+     * @param object $raw
+     *
+     * @return object
+     */
+    protected function map($method, $raw)
+    {
+        $classMap = null;
+        $asClass = true;
+
+        if (array_key_exists($method, $this->mapping['mapper'])) {
+            $classMap = $this->mapping['mapper'];
+        }
+        if (array_key_exists($method, $this->mapping['strict'])) {
+            $classMap = $this->mapping['strict'];
+            $this->client->setStrictMapping(true);
+        }
+        if (array_key_exists($method, $this->mapping['array'])) {
+            $classMap = $this->mapping['array'];
+            $asClass = false;
+        }
+
+        if (null === $classMap) {
+            return $raw;
+        }
+
+        return $asClass === true
+            ? $this->client->asClass($raw, $method, $classMap)
+            : $this->client->asArray($raw);
+    }
+
+    /**
+     * Дополняет массив аргументов аргументами по умолчанию для каждого запроса
+     *
+     * @param array $args Массив аргументов
+     *
+     * @return array
+     */
+    protected function createArgs(array $args = [])
+    {
+        $args = parent::createArgs($args);
+        if (null !== $this->defaultArgs) {
+            $args = array_merge($this->defaultArgs, $args);
+        }
+
+        return $args;
+    }
+}
