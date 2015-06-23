@@ -4,4 +4,14 @@
 [![Packagist](https://img.shields.io/packagist/dt/itmh/service-tools.svg?style=flat-square)](https://packagist.org/packages/itmh/service-tools)
 
 # service-tools
-Layer for service communication
+Библиотека для упрощения межсервисного взаимодействия
+
+```
+composer require "itmh/service-tools=0.*"
+```
+
+```
+"require": {
+    "itmh/service-tools": "0.*"
+}
+```
