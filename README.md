@@ -7,11 +7,11 @@
 Библиотека для упрощения межсервисного взаимодействия
 
 ```
-composer require "itmh/service-tools=0.*"
+composer require "itmh/service-tools=0.0.x"
 ```
 
 ```
 "require": {
-    "itmh/service-tools": "0.*"
+    "itmh/service-tools": "0.0.x"
 }
 ```
