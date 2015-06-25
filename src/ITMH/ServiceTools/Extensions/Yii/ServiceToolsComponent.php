@@ -5,8 +5,12 @@ namespace ITMH\ServiceTools\Extensions\Yii;
 use ITMH\ServiceTools\Core\Response;
 use ITMH\ServiceTools\Core\Service;
 
-/** @noinspection PhpUndefinedNamespaceInspection PhpUndefinedClassInspection */
-class ServiceToolsComponent extends yii\base\Component
+/** @noinspection
+ * PhpUndefinedNamespaceInspection
+ * PhpUndefinedClassInspection
+ * PhpUnnecessaryFullyQualifiedNameInspection
+ */
+class ServiceToolsComponent extends \yii\base\Component
 {
     /**
      * @var string
