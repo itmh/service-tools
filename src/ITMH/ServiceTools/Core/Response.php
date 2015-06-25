@@ -1,12 +1,12 @@
 <?php
 
-namespace ServiceTools\Core;
+namespace ITMH\ServiceTools\Core;
 
 use ErrorException;
 
 /**
  * Class Response
- * @package ServiceTools\Core
+ * @package ITMH\ServiceTools\Core
  */
 class Response
 {
