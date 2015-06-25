@@ -8,10 +8,14 @@
     {
       "name": "Maxim Chshanovskiy",
       "email": "chshanovskiy.maxim@itmh.ru"
+    },
+    {
+      "name": "Nikita Morozov",
+      "email": "morozov.nikita@itmh.ru"
     }
   ],
   "require": {
-      "php": ">=5.4.0",
+    "php": ">=5.4.0",
     "monolog/monolog": "1.14.x",
     "tedivm/stash": "0.12.x",
     "itmh/soap-client": "0.0.x"
