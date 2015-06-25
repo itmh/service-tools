@@ -1,11 +1,12 @@
 <?php
 
-namespace ServiceTools\Services;
+namespace ITMH\ServiceTools\Services;
 
+use ITMH\ServiceTools\Core\ConfigurationErrorException;
+use ITMH\ServiceTools\Core\Response;
+use ITMH\ServiceTools\Core\Service;
 use ITMH\Soap\Client;
-use ServiceTools\Core\ConfigurationErrorException;
-use ServiceTools\Core\Response;
-use ServiceTools\Core\Service;
+use ITMH\Soap\Exception\InvalidParameterException;
 use SoapFault;
 
 /**
@@ -35,7 +36,7 @@ class SoapService extends Service
         // строгое приведение результата к экземпляру класса (бросает исключение при несоответствии полей)
         'strict' => [],
         // приведение результата к обычному массиву
-        'array' => [],
+        'array' => []
     ];
 
     /**
@@ -101,6 +102,7 @@ class SoapService extends Service
      * @param array  $args   Аргументы вызываемого метода
      *
      * @return Response
+     * @throws InvalidParameterException
      */
     protected function implementation($method, array $args = array())
     {
@@ -119,6 +121,7 @@ class SoapService extends Service
      * @param object $raw
      *
      * @return object
+     * @throws InvalidParameterException
      */
     protected function map($method, $raw)
     {

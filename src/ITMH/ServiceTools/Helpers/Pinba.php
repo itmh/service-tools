@@ -1,10 +1,10 @@
 <?php
 
-namespace ServiceTools\Helpers;
+namespace ITMH\ServiceTools\Helpers;
 
 /**
  * Class Pinba
- * @package ServiceTools\Core
+ * @package ITMH\ServiceTools\Core
  */
 class Pinba
 {

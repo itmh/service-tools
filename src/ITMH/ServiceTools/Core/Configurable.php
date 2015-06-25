@@ -1,10 +1,10 @@
 <?php
 
-namespace ServiceTools\Core;
+namespace ITMH\ServiceTools\Core;
 
 /**
  * Interface Configurable
- * @package ServiceTools\Core
+ * @package ITMH\ServiceTools\Core
  */
 interface Configurable
 {

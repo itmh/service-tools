@@ -1,12 +1,12 @@
 <?php
 
-namespace ServiceTools\Core;
+namespace ITMH\ServiceTools\Core;
 
+use ITMH\ServiceTools\Helpers\Pinba;
 use Monolog\Handler\AbstractHandler;
 use Monolog\Handler\ErrorLogHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
-use ServiceTools\Helpers\Pinba;
 use Stash\Driver\Composite;
 use Stash\Driver\Ephemeral;
 use Stash\Interfaces\DriverInterface;
@@ -14,7 +14,7 @@ use Stash\Pool;
 
 /**
  * Class Service
- * @package ITMH\core
+ * @package ITMH\ServiceTools\Core
  */
 abstract class Service implements Configurable
 {
@@ -246,6 +246,7 @@ abstract class Service implements Configurable
      *
      * @return Response
      * @throws ConfigurationErrorException
+     * @throws \InvalidArgumentException
      */
     public function __call($method, array $args = array())
     {
