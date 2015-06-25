@@ -25,7 +25,7 @@ class ServiceToolsComponent extends \yii\base\Component
     /**
      * @var Service
      */
-    private $instance;
+    protected $instance;
 
     /**
      * Выполняет пробрасывание метода к экземпляру сервиса
