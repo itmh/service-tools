@@ -96,7 +96,7 @@ class LdapService extends Service
     {
         array_unshift($args, $this->client);
         try {
-            $raw = call_user_func_array($method, $args);
+            $raw = call_user_func_array(sprintf('ldap_%s', $method), $args);
 
             return Response::success($raw);
         } catch (\Exception $e) {
