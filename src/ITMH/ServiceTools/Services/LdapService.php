@@ -57,52 +57,6 @@ use ITMH\ServiceTools\Core\Service;
  * @method sort
  * @method start_tls
  * @method t61_to_8859
- * @method unbindldap_8859_to_t61
- * @method add
- * @method bind
- * @method close
- * @method compare
- * @method connect
- * @method control_paged_result_response
- * @method control_paged_result
- * @method count_entries
- * @method delete
- * @method dn2ufn
- * @method err2str
- * @method errno
- * @method error
- * @method escape
- * @method explode_dn
- * @method first_attribute
- * @method first_entry
- * @method first_reference
- * @method free_result
- * @method get_attributes
- * @method get_dn
- * @method get_entries
- * @method get_option
- * @method get_values_len
- * @method get_values
- * @method list
- * @method mod_add
- * @method mod_del
- * @method mod_replace
- * @method modify_batch
- * @method modify
- * @method next_attribute
- * @method next_entry
- * @method next_reference
- * @method parse_reference
- * @method parse_result
- * @method read
- * @method rename
- * @method sasl_bind
- * @method search
- * @method set_option
- * @method set_rebind_proc
- * @method sort
- * @method start_tls
- * @method t61_to_8859
  * @method unbind
  */
 class LdapService extends Service
