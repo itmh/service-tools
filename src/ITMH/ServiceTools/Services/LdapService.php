@@ -142,10 +142,10 @@ class LdapService extends Service
      */
     protected function implementation($method, array $args = array())
     {
+        $this->logger->info(var_export($args, true));
         array_unshift($args, $this->client);
         try {
             $raw = call_user_func_array(sprintf('ldap_%s', $method), $args);
-
             return Response::success($raw);
         } catch (\Exception $e) {
             return Response::failure(null, $e->getMessage());
