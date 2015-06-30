@@ -144,11 +144,13 @@ class SoapService extends Service
         if (array_key_exists($method, $this->mapping['array'])
             || array_key_exists('*', $this->mapping['array'])
         ) {
+            $classMap = $this->mapping['array'];
             $asClass = false;
         }
         if (array_key_exists($method, $this->mapping['array_strict'])
             || array_key_exists('*', $this->mapping['array_strict'])
         ) {
+            $classMap = $this->mapping['array_strict'];
             $asClass = false;
             $asStrictArray = true;
         }
