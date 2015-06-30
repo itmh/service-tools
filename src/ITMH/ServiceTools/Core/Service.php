@@ -270,7 +270,10 @@ abstract class Service implements Configurable
     public function __call($method, array $args = [])
     {
         $cacheKey = md5(serialize(func_get_args()));
-        $tag = ['_' => substr($cacheKey, 0, 6)];
+        $tag = [
+            '_' => substr($cacheKey, 0, 6),
+            'call' => sprintf('%s->%s', get_class($this), $method)
+        ];
 
         $args = $this->createArgs($args);
 
