@@ -270,15 +270,17 @@ abstract class Service implements Configurable
     public function __call($method, array $args = [])
     {
         $cacheKey = md5(serialize(func_get_args()));
-        $tag = [
-            '_' => substr($cacheKey, 0, 6),
-            'call' => sprintf('%s->%s', get_class($this), $method),
-            'args' => $args
-        ];
+        $tag = ['_' => uniqid(substr($cacheKey, 0, 6) . '_', true)];
 
         $args = $this->createArgs($args);
 
-        $timer = $this->pinba->start(array_merge($tag, ['args' => $args]));
+        $timer = $this->pinba->start(array_merge(
+            $tag,
+            [
+                'call' => sprintf('%s->%s', get_class($this), $method),
+                'args' => $args
+            ]
+        ));
 
         $this->logger->info(
             sprintf('%s->%s', get_class($this), $method),
