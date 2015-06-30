@@ -2,18 +2,38 @@
 
 namespace ITMH\ServiceTools\Helpers;
 
+use ITMH\ServiceTools\Core\Configurable;
+use ITMH\ServiceTools\Core\ConfigurationErrorException;
+
 /**
  * Class Pinba
  * @package ITMH\ServiceTools\Core
  */
-class Pinba
+class Pinba implements Configurable
 {
+    const ERR__TYPE_REQUIRED = 'Type required';
+    const ERR__HOST_REQUIRED = 'Target host name required';
+
     /**
      * Флаг доступности
      *
      * @var bool
      */
     private $enabled;
+
+    /**
+     * Опции конфигурации
+     *
+     * @var array
+     */
+    private $config;
+
+    /**
+     * Флаг конфигурации
+     *
+     * @var boolean
+     */
+    private $configured;
 
     /**
      * Конструктор без параметров, определяет доступность расширения
@@ -23,17 +43,46 @@ class Pinba
         $this->enabled = extension_loaded('pinba') && ini_get('pinba.enabled');
     }
 
+
+    /**
+     * Производит конфигурирование сервиса
+     *
+     * @param array $config опции конфигурации
+     *
+     * @throws ConfigurationErrorException
+     */
+    public function configure(array $config = [])
+    {
+        if (array_key_exists('type', $config)) {
+            throw new ConfigurationErrorException(self::ERR__TYPE_REQUIRED);
+        }
+        if (array_key_exists('target', $config)) {
+            throw new ConfigurationErrorException(self::ERR__HOST_REQUIRED);
+        }
+        $this->config = $config;
+
+        $this->configured = true;
+    }
+
+    /**
+     * Возвращает состояние конфигурации
+     *
+     * @return bool
+     */
+    public function isConfigured()
+    {
+        return $this->configured;
+    }
+
     /**
      * Запускает таймер и возвращает ресурс
      * https://github.com/tony2001/pinba_engine/wiki/PHP-extension#pinba_timer_start
      *
-     * @param string $type   Тип измерения (например SoapService)
-     * @param string $target Цель измерения (например имя метода)
-     * @param array  $more   Любые произвольные данные
+     * @param array $tags Любые произвольные данные
      *
      * @return resource|null
      */
-    public function start($type, $target, array $more = [])
+    public function start(array $tags = [])
     {
         if (!$this->isEnabled()) {
             return null;
@@ -42,9 +91,9 @@ class Pinba
         /** @noinspection PhpUndefinedFunctionInspection */
 
         return pinba_timer_start(array_merge([
-            'type' => $type,
-            'target' => $target
-        ]), $more);
+            'type' => $this->config['type'],
+            'target' => $this->config['target']
+        ]), $tags);
     }
 
     /**

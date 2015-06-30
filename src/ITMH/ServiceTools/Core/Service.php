@@ -149,12 +149,15 @@ abstract class Service implements Configurable
      * Производит конфигурирование сервиса
      *
      * @param array $config Опции конфигурации
+     *
+     * @throws ConfigurationErrorException
      */
     public function configure(array $config = [])
     {
         if (null !== $config) {
             $this->configureCacher($config);
             $this->configureLogger($config);
+            $this->configurePinba($config);
         }
 
         $this->configured = true;
@@ -237,6 +240,22 @@ abstract class Service implements Configurable
     }
 
     /**
+     * Производит конфигурирование pinba
+     *
+     * @param array $config Опции конфигурации
+     *
+     * @throws ConfigurationErrorException
+     */
+    private function configurePinba(array $config = [])
+    {
+        if (!array_key_exists('pinba', $config)) {
+            return;
+        }
+
+        $this->pinba->configure($config);
+    }
+
+    /**
      * Вызывает соответствующий метод в конкретной реализации,
      * самостоятельно занимаясь кэшированием, логгированием
      * и измерением времени
@@ -248,7 +267,7 @@ abstract class Service implements Configurable
      * @throws ConfigurationErrorException
      * @throws \InvalidArgumentException
      */
-    public function __call($method, array $args = array())
+    public function __call($method, array $args = [])
     {
         $cacheKey = md5(serialize(func_get_args()));
         $tag = ['_' => substr($cacheKey, 0, 6)];
@@ -348,5 +367,5 @@ abstract class Service implements Configurable
      *
      * @return Response
      */
-    abstract protected function implementation($method, array $args = array());
+    abstract protected function implementation($method, array $args = []);
 }

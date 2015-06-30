@@ -97,6 +97,13 @@ class SoapService extends Service
             $this->mapping['array_strict'] = $config['__mapper_array_strict'];
         }
 
+        if (!array_key_exists('pinba', $config)) {
+            $config['pinba'] = [
+                'type' => 'soap',
+                'target' => $config['url']
+            ];
+        }
+
         parent::configure($config);
     }
 

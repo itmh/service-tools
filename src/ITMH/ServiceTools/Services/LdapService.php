@@ -129,6 +129,13 @@ class LdapService extends Service
             throw new ErrorException(self::ERR__AD_BIND);
         }
 
+        if (!array_key_exists('pinba', $config)) {
+            $config['pinba'] = [
+                'type' => 'ldap',
+                'target' => $config['host']
+            ];
+        }
+
         parent::configure($config);
     }
 
@@ -146,6 +153,7 @@ class LdapService extends Service
         array_unshift($args, $this->client);
         try {
             $raw = call_user_func_array(sprintf('ldap_%s', $method), $args);
+
             return Response::success($raw);
         } catch (\Exception $e) {
             return Response::failure(null, $e->getMessage());
