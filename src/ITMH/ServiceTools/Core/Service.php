@@ -310,7 +310,9 @@ abstract class Service implements Configurable
             if (!$response->isOk()) {
                 $this->logger->error('error response', $response->getError());
             } else {
-                $this->logger->info('successful response');
+                $this->logger->debug('successful response',
+                    $response->getContent()
+                );
             }
         }
 
