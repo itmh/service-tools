@@ -33,7 +33,7 @@ class Pinba implements Configurable
      *
      * @var boolean
      */
-    private $configured;
+    private $configured = false;
 
     /**
      * Конструктор без параметров, определяет доступность расширения
@@ -53,10 +53,10 @@ class Pinba implements Configurable
      */
     public function configure(array $config = [])
     {
-        if (array_key_exists('type', $config)) {
+        if (!array_key_exists('type', $config)) {
             throw new ConfigurationErrorException(self::ERR__TYPE_REQUIRED);
         }
-        if (array_key_exists('target', $config)) {
+        if (!array_key_exists('target', $config)) {
             throw new ConfigurationErrorException(self::ERR__HOST_REQUIRED);
         }
         $this->config = $config;
@@ -78,22 +78,22 @@ class Pinba implements Configurable
      * Запускает таймер и возвращает ресурс
      * https://github.com/tony2001/pinba_engine/wiki/PHP-extension#pinba_timer_start
      *
-     * @param array $tags Любые произвольные данные
+     * @param array $data Любые произвольные данные
      *
      * @return resource|null
      */
-    public function start(array $tags = [])
+    public function start(array $data = [])
     {
-        if (!$this->isEnabled()) {
+        if (!$this->isEnabled() || !$this->isConfigured()) {
             return null;
         }
 
         /** @noinspection PhpUndefinedFunctionInspection */
 
-        return pinba_timer_start(array_merge([
+        return pinba_timer_start([
             'type' => $this->config['type'],
             'target' => $this->config['target']
-        ]), $tags);
+        ], $data);
     }
 
     /**

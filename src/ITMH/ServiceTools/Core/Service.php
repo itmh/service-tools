@@ -252,7 +252,7 @@ abstract class Service implements Configurable
             return;
         }
 
-        $this->pinba->configure($config);
+        $this->pinba->configure($config['pinba']);
     }
 
     /**
@@ -272,7 +272,8 @@ abstract class Service implements Configurable
         $cacheKey = md5(serialize(func_get_args()));
         $tag = [
             '_' => substr($cacheKey, 0, 6),
-            'call' => sprintf('%s->%s', get_class($this), $method)
+            'call' => sprintf('%s->%s', get_class($this), $method),
+            'args' => $args
         ];
 
         $args = $this->createArgs($args);
