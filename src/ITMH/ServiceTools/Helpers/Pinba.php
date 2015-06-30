@@ -61,6 +61,11 @@ class Pinba implements Configurable
         }
         $this->config = $config;
 
+        $host = parse_url($this->config['target'], PHP_URL_HOST);
+        if (false !== $host) {
+            $this->config['target'] = $host;
+        }
+
         $this->configured = true;
     }
 
