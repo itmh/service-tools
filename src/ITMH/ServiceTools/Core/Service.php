@@ -274,12 +274,12 @@ abstract class Service implements Configurable
 
         $args = $this->createArgs($args);
 
-        $timer = $this->pinba->start(
-            get_class($this), $method, array_merge($tag, ['args' => $args])
-        );
+        $timer = $this->pinba->start(array_merge($tag, ['args' => $args]));
 
-        $this->logger->info(sprintf('%s->%s', get_class($this), $method),
-            array_merge($tag, $args));
+        $this->logger->info(
+            sprintf('%s->%s', get_class($this), $method),
+            array_merge($tag, $args)
+        );
 
         $this->checkIsConfigured();
 
