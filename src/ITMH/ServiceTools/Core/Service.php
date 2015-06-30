@@ -270,21 +270,17 @@ abstract class Service implements Configurable
     public function __call($method, array $args = [])
     {
         $cacheKey = md5(serialize(func_get_args()));
-        $tag = ['_' => uniqid(substr($cacheKey, 0, 6) . '_', true)];
 
         $args = $this->createArgs($args);
 
-        $timer = $this->pinba->start(array_merge(
-            $tag,
-            [
-                'call' => sprintf('%s->%s', get_class($this), $method),
-                'args' => $args
-            ]
-        ));
+        $timer = $this->pinba->start([
+            'call' => sprintf('%s->%s', get_class($this), $method),
+            'args' => $args
+        ]);
 
         $this->logger->info(
             sprintf('%s->%s', get_class($this), $method),
-            array_merge($tag, $args)
+            $args
         );
 
         $this->checkIsConfigured();
@@ -294,13 +290,13 @@ abstract class Service implements Configurable
         $inCache = !$item->isMiss();
         $this->logger->info(sprintf(
             'item found in cache: %s', $inCache ? 'yes' : 'no'
-        ), $tag);
+        ));
 
         if ($inCache) {
-            $this->logger->info('get from cache', $tag);
+            $this->logger->info('get from cache');
             $response = $item->get();
         } else {
-            $this->logger->info('get from source', $tag);
+            $this->logger->info('get from source');
             $response = $this->implementation($method, $args);
 
             $expiresDefault = array_key_exists('default', $this->cacherExpires)
@@ -312,18 +308,14 @@ abstract class Service implements Configurable
             $item->set($response, $expires);
 
             if (!$response->isOk()) {
-                $this->logger->error('error response',
-                    array_merge($tag, [$response->getError()])
-                );
+                $this->logger->error('error response', $response->getError());
             } else {
                 $this->logger->info('successful response', $tag);
             }
         }
 
         $this->pinba->stop($timer);
-        $this->logger->info('pinba',
-            array_merge($tag, [$this->pinba->info($timer)])
-        );
+        $this->logger->info('pinba', $this->pinba->info($timer));
 
         return $response;
     }
