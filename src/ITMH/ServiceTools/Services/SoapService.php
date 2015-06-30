@@ -36,7 +36,9 @@ class SoapService extends Service
         // строгое приведение результата к экземпляру класса (бросает исключение при несоответствии полей)
         'strict' => [],
         // приведение результата к обычному массиву
-        'array' => []
+        'array' => [],
+        // приведение результата к обычному массиву, с сохранением корневого индекса
+        'array_strict' => []
     ];
 
     /**
@@ -91,6 +93,9 @@ class SoapService extends Service
         if (array_key_exists('__mapper_array', $config)) {
             $this->mapping['array'] = $config['__mapper_array'];
         }
+        if (array_key_exists('__mapper_array_strict', $config)) {
+            $this->mapping['array_strict'] = $config['__mapper_array_strict'];
+        }
 
         parent::configure($config);
     }
@@ -127,6 +132,7 @@ class SoapService extends Service
     {
         $classMap = null;
         $asClass = true;
+        $asStrictArray = false;
 
         if (array_key_exists($method, $this->mapping['mapper'])) {
             $classMap = $this->mapping['mapper'];
@@ -138,8 +144,13 @@ class SoapService extends Service
         if (array_key_exists($method, $this->mapping['array'])
             || array_key_exists('*', $this->mapping['array'])
         ) {
-            $classMap = $this->mapping['array'];
             $asClass = false;
+        }
+        if (array_key_exists($method, $this->mapping['array_strict'])
+            || array_key_exists('*', $this->mapping['array_strict'])
+        ) {
+            $asClass = false;
+            $asStrictArray = true;
         }
 
         if (null === $classMap) {
@@ -148,7 +159,7 @@ class SoapService extends Service
 
         return $asClass === true
             ? $this->client->asClass($raw, $method, $classMap)
-            : $this->client->asArray($raw);
+            : $this->client->asArray($raw, $asStrictArray);
     }
 
     /**
