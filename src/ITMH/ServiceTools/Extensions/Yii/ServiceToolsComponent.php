@@ -35,7 +35,7 @@ class ServiceToolsComponent extends \yii\base\Component
      *
      * @return Response
      */
-    public function __call($method, array $args = [])
+    public function __call($method, $args = [])
     {
         if (null === $this->instance) {
             $this->init();
