@@ -308,11 +308,9 @@ abstract class Service implements Configurable
             $item->set($response, $expires);
 
             if (!$response->isOk()) {
-                $this->logger->error('error response', $response->getError());
+                $this->logger->error('error response', [$response->getError()]);
             } else {
-                $this->logger->debug('successful response',
-                    $response->getContent()
-                );
+                $this->logger->debug('successful response', [$response->getContent()]);
             }
         }
 
