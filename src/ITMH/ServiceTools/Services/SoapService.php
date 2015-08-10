@@ -182,6 +182,9 @@ class SoapService extends Service
     {
         $args = parent::createArgs($args);
         if (null !== $this->defaultArgs) {
+            if (array_key_exists(0, $args)) {
+                $args = $args[0];
+            }
             $args = array_merge($this->defaultArgs, $args);
         }
 
