@@ -167,7 +167,7 @@ class SoapService extends Service
         }
 
         return $asClass === true
-            ? $this->client->asClass($raw, $method, $classMap)
+            ? $this->client->asClass($raw, $classMap)
             : $this->client->asArray($raw, $asStrictArray);
     }
 
