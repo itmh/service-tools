@@ -99,7 +99,7 @@ class CoreTest extends Test
             ->method('isEnabled')
             ->willReturn(false);
 
-        $timer = $pinba->start('foo', 'bar');
+        $timer = $pinba->start(array('foo', 'bar'));
         self::assertNull($timer);
 
         $success = $pinba->stop($timer);
