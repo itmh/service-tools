@@ -124,7 +124,7 @@ class SoapService extends Service
 
             return Response::success($raw);
         } catch (SoapFault $fault) {
-            return Response::failure(null, $fault->getMessage());
+            return Response::failure(null, $fault->getMessage(), $fault->faultcode);
         }
     }
 
