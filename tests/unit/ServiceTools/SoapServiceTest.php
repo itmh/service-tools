@@ -2,9 +2,9 @@
 namespace ServiceTools;
 
 use Codeception\TestCase\Test;
-use ServiceTools\Core\ConfigurationErrorException;
-use ServiceTools\Core\Response;
-use ServiceTools\Services\SoapService;
+use ITMH\ServiceTools\Core\ConfigurationErrorException;
+use ITMH\ServiceTools\Core\Response;
+use ITMH\ServiceTools\Services\SoapService;
 
 class SoapServiceTest extends Test
 {

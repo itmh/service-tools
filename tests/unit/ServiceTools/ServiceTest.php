@@ -2,10 +2,10 @@
 
 use Codeception\Specify;
 use Codeception\TestCase\Test;
-use ServiceTools\Core\ConfigurationErrorException;
-use ServiceTools\Core\Response;
-use ServiceTools\Core\Service;
-use ServiceTools\Helpers\Pinba;
+use ITMH\ServiceTools\Core\ConfigurationErrorException;
+use ITMH\ServiceTools\Core\Response;
+use ITMH\ServiceTools\Core\Service;
+use ITMH\ServiceTools\Helpers\Pinba;
 
 class CoreTest extends Test
 {
@@ -73,9 +73,11 @@ class CoreTest extends Test
     public function testResponseFailureHelper()
     {
         $failureResponseError = 'failure';
-        $failureResponse = Response::failure(null, $failureResponseError);
+        $failureResponseCode = 'InternalError';
+        $failureResponse = Response::failure(null, $failureResponseError, $failureResponseCode);
         self::assertFalse($failureResponse->isOk());
         self::assertNotNull($failureResponse->getError());
+        self::assertNotNull($failureResponse->getErrorCode());
     }
 
     public function testResponseCheckSerialization()
@@ -97,7 +99,7 @@ class CoreTest extends Test
             ->method('isEnabled')
             ->willReturn(false);
 
-        $timer = $pinba->start('foo', 'bar');
+        $timer = $pinba->start(array('foo', 'bar'));
         self::assertNull($timer);
 
         $success = $pinba->stop($timer);
