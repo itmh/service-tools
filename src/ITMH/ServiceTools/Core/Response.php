@@ -138,8 +138,21 @@ class Response
      * Возвращает строку с описанием ошибки
      *
      * @return string
+     *
+     * @deprecated Изменилось имя свойства. Используйте getErrorMessage вместо getError.
+     * @see        \ITMH\ServiceTools\Core\Response::getErrorMessage
      */
     public function getError()
+    {
+        return $this->errorMessage;
+    }
+
+    /**
+     * Возвращает строку с описанием ошибки
+     *
+     * @return string
+     */
+    public function getErrorMessage()
     {
         return $this->errorMessage;
     }
@@ -153,6 +166,4 @@ class Response
     {
         return $this->errorCode;
     }
-
-
 }
