@@ -1,7 +1,7 @@
 <?php
 
 use Codeception\TestCase\Test;
-use ServiceTools\Core\Service;
+use ITMH\ServiceTools\Core\Service;
 use Stash\Driver\Ephemeral;
 use Stash\DriverList;
 use Stash\Interfaces\PoolInterface;
@@ -22,7 +22,7 @@ class ServiceCacherConfigTest extends Test
     }
 
     /**
-     * @return \ServiceTools\Core\Service|\PHPUnit_Framework_MockObject_MockObject
+     * @return \ITMH\ServiceTools\Core\Service|\PHPUnit_Framework_MockObject_MockObject
      */
     private function getMockService()
     {

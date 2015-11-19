@@ -6,7 +6,7 @@ use Codeception\TestCase\Test;
 use Monolog\Handler\ErrorLogHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
-use ServiceTools\Core\Service;
+use ITMH\ServiceTools\Core\Service;
 
 class ServiceLoggerConfigTest extends Test
 {
@@ -23,7 +23,7 @@ class ServiceLoggerConfigTest extends Test
     }
 
     /**
-     * @return \ServiceTools\Core\Service|\PHPUnit_Framework_MockObject_MockObject
+     * @return \ITMH\ServiceTools\Core\Service|\PHPUnit_Framework_MockObject_MockObject
      */
     private function getMockService()
     {
