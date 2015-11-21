@@ -8,11 +8,11 @@
 Библиотека для упрощения межсервисного взаимодействия
 
 ```
-composer require "itmh/service-tools=1.2.x"
+composer require "itmh/service-tools=1.4.x"
 ```
 
 ```
 "require": {
-    "itmh/service-tools": "~1.2"
+    "itmh/service-tools": "~1.4"
 }
 ```
