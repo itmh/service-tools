@@ -77,6 +77,7 @@ class CoreTest extends Test
         $failureResponse = Response::failure(null, $failureResponseError, $failureResponseCode);
         self::assertFalse($failureResponse->isOk());
         self::assertNotNull($failureResponse->getError());
+        self::assertNotNull($failureResponse->getErrorMessage());
         self::assertNotNull($failureResponse->getErrorCode());
     }
 
