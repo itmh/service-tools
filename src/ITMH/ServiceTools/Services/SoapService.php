@@ -6,11 +6,13 @@ use ITMH\ServiceTools\Core\ConfigurationErrorException;
 use ITMH\ServiceTools\Core\Response;
 use ITMH\ServiceTools\Core\Service;
 use ITMH\Soap\Client;
+use ITMH\Soap\Mapper;
 use ITMH\Soap\Exception\InvalidParameterException;
 use SoapFault;
 
 /**
  * Class SoapService
+ *
  * @package ServiceTools\Services
  */
 class SoapService extends Service
@@ -26,20 +28,11 @@ class SoapService extends Service
     protected $client;
 
     /**
-     * Массив моделей для автоматического отображения результата
+     * Экземпляр клиента
      *
-     * @var array
+     * @var \ITMH\Soap\Mapper
      */
-    protected $mapping = [
-        // нестрогое приведение результата к экземпляру класса (игнорирует несоответствие полей)
-        'mapper' => [],
-        // строгое приведение результата к экземпляру класса (бросает исключение при несоответствии полей)
-        'strict' => [],
-        // приведение результата к обычному массиву
-        'array' => [],
-        // приведение результата к обычному массиву, с сохранением корневого индекса
-        'array_strict' => []
-    ];
+    protected $mapper;
 
     /**
      * Аргументы по умолчанию, которые должны добавляться к каждому запросу
@@ -71,6 +64,7 @@ class SoapService extends Service
         if (array_key_exists('contentType', $config)) {
             $this->client->setContentType($config['contentType']);
         }
+
         if (array_key_exists('curlOptions', $config)) {
             $this->client->setCurlOptions($config['curlOptions']);
         }
@@ -84,17 +78,9 @@ class SoapService extends Service
             $this->defaultArgs = $config['defaultArgs'];
         }
 
-        if (array_key_exists('__mapper', $config)) {
-            $this->mapping['mapper'] = $config['__mapper'];
-        }
-        if (array_key_exists('__mapper_strict', $config)) {
-            $this->mapping['strict'] = $config['__mapper_strict'];
-        }
-        if (array_key_exists('__mapper_array', $config)) {
-            $this->mapping['array'] = $config['__mapper_array'];
-        }
-        if (array_key_exists('__mapper_array_strict', $config)) {
-            $this->mapping['array_strict'] = $config['__mapper_array_strict'];
+        $this->mapper = new Mapper();
+        if (array_key_exists('mapper', $config)) {
+            $this->mapper->setConfig($config['mapper']);
         }
 
         if (!array_key_exists('pinba', $config)) {
@@ -137,38 +123,7 @@ class SoapService extends Service
      */
     protected function map($method, $raw)
     {
-        $classMap = null;
-        $asClass = true;
-        $asStrictArray = false;
-
-        if (array_key_exists($method, $this->mapping['mapper'])) {
-            $classMap = $this->mapping['mapper'];
-        }
-        if (array_key_exists($method, $this->mapping['strict'])) {
-            $classMap = $this->mapping['strict'];
-            $this->client->setStrictMapping(true);
-        }
-        if (array_key_exists($method, $this->mapping['array'])
-            || array_key_exists('*', $this->mapping['array'])
-        ) {
-            $classMap = $this->mapping['array'];
-            $asClass = false;
-        }
-        if (array_key_exists($method, $this->mapping['array_strict'])
-            || array_key_exists('*', $this->mapping['array_strict'])
-        ) {
-            $classMap = $this->mapping['array_strict'];
-            $asClass = false;
-            $asStrictArray = true;
-        }
-
-        if (null === $classMap) {
-            return $raw;
-        }
-
-        return $asClass === true
-            ? $this->client->asClass($raw, $classMap)
-            : $this->client->asArray($raw, $asStrictArray);
+        return $this->mapper->mapMethodResponse($method, $raw);
     }
 
     /**
