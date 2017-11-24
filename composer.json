@@ -22,7 +22,7 @@
     "php": ">=5.4.0",
     "monolog/monolog": "1.x",
     "tedivm/stash": "0.x",
-    "itmh/soap-client": "0.0.x"
+    "itmh/soap-client": "^0.0.6"
   },
   "require-dev": {
     "phing/phing": "~2.0",
